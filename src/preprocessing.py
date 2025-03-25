@@ -1,14 +1,16 @@
-import numpy as np
-
 def one_hot_encoder(df):
-    # Crear una nueva columna categórica
+    """Codifica las columnas 'lat' y 'lon' en una nueva variable categórica 'zona'.  
+    Params: df (DataFrame).  
+    Return: None (modifica el DataFrame en el lugar).
+    """
     df["zona"] = df["lat"].apply(lambda x: 0 if -35.4 <= x <= -33.5 else 1)
     df.drop(columns="lat", inplace=True)
     df.drop(columns="lon", inplace=True)
 
 def convert_areaunits(df):
     """Convierte las columnas de área de pies cuadrados a metros cuadrados.  
-    Params: df (DataFrame). Returns: DataFrame."""
+    Params: df (DataFrame). 
+    """
     for fila in df.itertuples(index=True):
         if fila.area_units == 'sqft':
             df.at[fila.Index, 'area'] *= 0.092903
@@ -16,7 +18,9 @@ def convert_areaunits(df):
 
 def normalize(train, val):
     """Normaliza los datos con media y desviación estándar de train.  
-    Params: train (DataFrame), val (DataFrame). Returns: (DataFrame, DataFrame)."""
+    Params: train (DataFrame), val (DataFrame).  
+    Returns: train_norm (DataFrame), val_norm (DataFrame), medias (Series), desv (Series).
+    """
     medias = train.mean()
     desv = train.std()
     
@@ -27,7 +31,10 @@ def normalize(train, val):
 
 
 def handle_missing_values(df):
-    """"""
+    """Imputa valores faltantes en 'rooms' y 'age' según reglas específicas.  
+    Params: df (DataFrame).  
+    Return: df (DataFrame) con valores imputados.
+    """
     rooms_1 = df.loc[df["rooms"] == 1, "area"].max()
     rooms_2 = df.loc[df["rooms"] == 2, "area"].max()
     rooms_3 = df.loc[df["rooms"] == 3, "area"].max()

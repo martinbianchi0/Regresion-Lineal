@@ -1,10 +1,9 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import pandas as pd
 
 class LinearRegression():
     def __init__(self, X, y, L1=0, L2=0):
-        """Inicializa el modelo con los datos X (features) y y (target)."""
+        """Inicializa el modelo con los datos 'X' (features), 'y' (target), y los coeficientes de regularización."""
         self.features = ['bias'] + list(X.columns)
         self.X = np.column_stack((np.ones(X.shape[0]), X if isinstance(X, np.ndarray) else X.to_numpy()))
         self.y = y if isinstance(y, np.ndarray) else y.to_numpy()
@@ -25,7 +24,7 @@ class LinearRegression():
             k += 1
 
     def pseudoinversa(self):
-        """Calcula los coeficientes usando la Pseudoinversa de Moore-Penrose."""
+        """Calcula los coeficientes usando el metodo de la Pseudoinversa."""
         m, n = self.X.shape
         I = np.eye(n)
         I[0, 0] = 0

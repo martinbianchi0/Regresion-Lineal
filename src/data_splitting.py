@@ -4,7 +4,8 @@ from metrics import mse
 
 def train_val_split(dx, dy, split=0.8):
     """Divide dx y dy en conjuntos de entrenamiento y validación.  
-    Params: dx (DataFrame), dy (Series), split (float). Returns: (dx_train, dx_val, dy_train, dy_val)."""
+    Params: dx (DataFrame), dy (Series), split (float). Returns: (dx_train, dx_val, dy_train, dy_val).
+    """
     n = len(dx)
     n = int(n * split)
     train_dx = dx[:n]
@@ -14,8 +15,10 @@ def train_val_split(dx, dy, split=0.8):
     return train_dx, val_dx, train_dy, val_dy
 
 def cross_val(x_train, y_train, l2, k=5):
-    """Divide train en k conjuntos de entrenamiento y validación.
-    Params: train (DataFrame), k (int). Returns: lista de tuplas (train_fold, val_fold)."""
+    """Divide x_train en k conjuntos de entrenamiento y validación.  
+    Params: x_train (DataFrame), y_train (Series), l2 (float), k (int).  
+    Return: Promedio de MSE (float)."
+    """
     n = len(x_train)
     indices = np.arange(n)
     np.random.shuffle(indices)  # Mezclar los datos para asegurar variedad
@@ -35,7 +38,7 @@ def cross_val(x_train, y_train, l2, k=5):
 
     mses = []
     for xtrain, ytrain, xval, yval in folds:
-        model = load_model(xtrain, ytrain, "pinv", L2=l2)
+        model = load_model(xtrain, ytrain, "gd", L2=l2)
         mses.append(mse(xval, yval, model.obtener_coeficientes()))
     
     return np.mean(mses)
